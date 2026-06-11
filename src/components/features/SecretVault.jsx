@@ -250,7 +250,9 @@ function VaultHome({ onSelect, onClose }) {
 function PasscodePad({ onSuccess }) {
   const [input, setInput] = useState('');
   const [shake, setShake] = useState(false);
+  const [showAngry, setShowAngry] = useState(false);
   const coverImg = getVaultAsset('vault_cover');
+  const angryImg = getVaultAsset("vault_angry.jpg");
 
   const press = (d) => {
     if (input.length >= VAULT_CODE.length) return;
@@ -260,7 +262,12 @@ function PasscodePad({ onSuccess }) {
       setTimeout(() => onSuccess(), 300);
     } else if (next.length >= VAULT_CODE.length) {
       setShake(true);
-      setTimeout(() => { setShake(false); setInput(''); }, 600);
+      setShowAngry(true);
+      setTimeout(() => {
+        setShake(false);
+        setShowAngry(false);
+        setInput("");
+      }, 1500);
     }
   };
 
@@ -269,19 +276,40 @@ function PasscodePad({ onSuccess }) {
   return (
     <div className="flex flex-col md:flex-row h-full">
       {/* Left — cover image */}
-      <div className="hidden md:flex w-2/5 items-center justify-center overflow-hidden rounded-l-2xl"
-        style={{ background: 'var(--color-bg-secondary)' }}>
-        {coverImg
-          ? <img src={coverImg} alt="vault" className="w-full h-full object-cover" />
-          : <Lock size={64} style={{ color: 'var(--color-border)' }} />
-        }
+      <div
+        className="hidden md:flex w-2/5 items-center justify-center overflow-hidden rounded-l-2xl"
+        style={{ background: "var(--color-bg-secondary)" }}
+      >
+        {showAngry && angryImg ? (
+          <img
+            src={angryImg}
+            alt="angry"
+            className="w-full h-full object-cover"
+          />
+        ) : coverImg ? (
+          <img
+            src={coverImg}
+            alt="vault"
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <Lock size={64} style={{ color: "var(--color-border)" }} />
+        )}
       </div>
 
       {/* Right — keypad */}
       <div className="flex-1 flex flex-col items-center justify-center gap-5 p-8">
-        <Lock size={28} style={{ color: 'var(--color-accent-primary)' }} />
-        <h2 className="text-xl font-extrabold" style={{ color: 'var(--color-accent-deep)' }}>Secret Vault</h2>
-        <p className="text-sm text-center" style={{ color: 'var(--color-text-tertiary)' }}>
+        <Lock size={28} style={{ color: "var(--color-accent-primary)" }} />
+        <h2
+          className="text-xl font-extrabold"
+          style={{ color: "var(--color-accent-deep)" }}
+        >
+          Secret Vault
+        </h2>
+        <p
+          className="text-sm text-center"
+          style={{ color: "var(--color-text-tertiary)" }}
+        >
           Enter the code to unlock
         </p>
 
@@ -292,41 +320,65 @@ function PasscodePad({ onSuccess }) {
           className="flex gap-3"
         >
           {Array.from({ length: VAULT_CODE.length }).map((_, i) => (
-            <div key={i}
+            <div
+              key={i}
               className="w-11 h-11 rounded-xl border-2 flex items-center justify-center text-lg font-bold"
               style={{
-                borderColor: input[i] ? 'var(--color-accent-primary)' : 'var(--color-border)',
-                color: 'var(--color-accent-deep)',
-                background: input[i] ? 'var(--color-bg-secondary)' : 'transparent',
-              }}>
-              {input[i] ? '●' : ''}
+                borderColor: input[i]
+                  ? "var(--color-accent-primary)"
+                  : "var(--color-border)",
+                color: "var(--color-accent-deep)",
+                background: input[i]
+                  ? "var(--color-bg-secondary)"
+                  : "transparent",
+              }}
+            >
+              {input[i] ? "●" : ""}
             </div>
           ))}
         </motion.div>
 
         {/* Number grid */}
         <div className="grid grid-cols-3 gap-3">
-          {[1,2,3,4,5,6,7,8,9].map(n => (
-            <motion.button key={n} whileTap={{ scale: 0.9 }} onClick={() => press(String(n))}
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
+            <motion.button
+              key={n}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => press(String(n))}
               className="w-14 h-14 rounded-2xl text-lg font-bold transition-colors"
               style={{
-                background: 'var(--color-bg-secondary)',
-                color: 'var(--color-accent-deep)',
-                border: '1.5px solid var(--color-border)',
-              }}>
+                background: "var(--color-bg-secondary)",
+                color: "var(--color-accent-deep)",
+                border: "1.5px solid var(--color-border)",
+              }}
+            >
               {n}
             </motion.button>
           ))}
           {/* Bottom row */}
           <div />
-          <motion.button whileTap={{ scale: 0.9 }} onClick={() => press('0')}
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={() => press("0")}
             className="w-14 h-14 rounded-2xl text-lg font-bold"
-            style={{ background: 'var(--color-bg-secondary)', color: 'var(--color-accent-deep)', border: '1.5px solid var(--color-border)' }}>
+            style={{
+              background: "var(--color-bg-secondary)",
+              color: "var(--color-accent-deep)",
+              border: "1.5px solid var(--color-border)",
+            }}
+          >
             0
           </motion.button>
-          <motion.button whileTap={{ scale: 0.9 }} onClick={del}
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={del}
             className="w-14 h-14 rounded-2xl text-sm"
-            style={{ background: 'var(--color-bg-secondary)', color: 'var(--color-text-secondary)', border: '1.5px solid var(--color-border)' }}>
+            style={{
+              background: "var(--color-bg-secondary)",
+              color: "var(--color-text-secondary)",
+              border: "1.5px solid var(--color-border)",
+            }}
+          >
             ⌫
           </motion.button>
         </div>

@@ -271,7 +271,7 @@ export default function SecretCat() {
             >
               {meowCount === 0
                 ? "Press it."
-                : `${meowCount} meow${meowCount > 1 ? "s" : ""} and counting`}
+                : `Tsundere x${meowCount} and counting`}
             </p>
             <div className="relative inline-block">
               <motion.button
@@ -284,7 +284,7 @@ export default function SecretCat() {
                     "linear-gradient(135deg, var(--color-accent-primary), var(--color-accent-deep))",
                 }}
               >
-                MEOW
+                PRESS ME TWIN
                 <AnimatePresence>
                   {meowPops.map((p) => (
                     <motion.span
